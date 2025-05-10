@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medico</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+         
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+        }
+
+        .navbar {
+            background: linear-gradient(45deg, #aeddf5 10%, #8ccf98 90%);
+            padding: 1.6rem 3rem;
+        }
+
+        a {
+            color: rgb(16, 15, 15);
+            font-size: 1.5rem;
+        }
+
+        .navbar a:hover {
+            color: #080808;
+        }
+
+        .section-title {
+            border-bottom: 2px solid #62a5f3;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: xx-large; /* Set font size to xx-large */
+        }
+
+        html {
+            scroll-behavior: smooth; /* Enables smooth scrolling */
+        }
+
+        .section-content {
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 20px 14px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-item,
+        .profile-item,
+        .emergency-item,
+        .about-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        }
+
+        .service-item:hover,
+        .profile-item:hover,
+        .emergency-item:hover,
+        .about-item:hover {
+            transform: scale(1.05);
+            box-shadow: 8px 4px 25px rgb(211, 232, 226);
+            background: linear-gradient(45deg, #aeddf5, #acf2b8);
+        }
+
+        .contact-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .no-copy {
+            user-select: none; /* Standard syntax */
+            -webkit-user-select: none; /* Chrome, Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            color: gray;
+            margin-top: auto;
+            font-size: x-large;
+        }
+        .hamburger-btn {
+            font-size: 1.9rem; /* Increase the font size */
+            padding: 0.5rem; /* Increase the padding for better click area */
+        }
+
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div>
+                <a href="#"><img src="new medico.png" alt="Logo of Medico" width="160" height="160"></a>
+            </div>
+            <div class="hidden md:flex space-x-4">
+                <a href="#main" class="text-white hover:underline ">Home</a>
+                <a href="predict" class="text-white hover:underline ">Predict Disease</a>
+                <a href="#about" class="text-white hover:underline ">About</a>
+                <a href="#services" class="text-white hover:underline ">Services</a>
+                <a href="#contact" class="text-white hover:underline">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-white focus:outline-none hamburger-btn">
+                    &#9776;
+                </button>
+            </div>
+        </div>
+        <div id="menu" class="hidden md:hidden mt-2">
+            <a href="#main" class="block text-white py-2">Home</a>
+            <a href="predict" class="block text-white py-2">Predict Disease</a>
+            <a href="#about" class="block text-white py-2">About</a>
+            <a href="#services" class="block text-white py-2">Services</a>
+            <a href="#contact" class="block text-white py-2">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div id="main" class="hero-section flex items-center justify-center text-black bg-opacity-50">
+        <div class="text-center p-8 bg-white bg-opacity-75 rounded-lg shadow-lg">
+            <h1 class="text-4xl font-bold mb-4">Welcome, {{ user.username }}!</h1>
+            <p class="text-lg mb-4">Helping you with guidance and dedicated care.</p>
+            <form action="{{ url_for('predict') }}" method="POST">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">
+                    Health Checkup
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto py-12 px-4">
+
+        <!-- Health Information Section -->
+        <section id="predict" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4 section-title">Health Information</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="profile-item">
+                    <h3 class="font-bold mb-2 text-xl">Your Profile</h3>
+                    <p><strong>Name:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Age:</strong> {{ health_info.profile.age }}</p>
+                    <p><strong>Gender:</strong> {{ health_info.profile.gender }}</p>
+                    <p><strong>Medical Conditions:</strong> {{ health_info.profile.conditions }}</p>
+                    <button 
+                       class="mt-4 px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-700"
+                       onclick="toggleEditForm()"
+                    >
+                      Edit
+                    </button>
+                </div>
+                <div id="editForm" class="hidden">
+                    <h3 class="font-bold mb-2 text-xl">Edit Your Profile</h3>
+                    <form action="/update-profile" method="POST" class="space-y-4">
+                        <div>
+                            <label for="name" class="block font-bold">Name</label>
+                            <input type="text" id="name" name="name" value="{{ user.username }}" class="border p-2 w-full" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block font-bold">Email</label>
+                            <input type="email" id="email" name="email" value="{{ user.email }}" class="border p-2 w-full" required>
+                        </div>
+                        <div>
+                            <label for="age" class="block font-bold">Age</label>
+                            <input type="number" id="age" name="age" value="{{ health_info.profile.age }}" class="border p-2 w-full" required>
+                        </div>
+                        <div>
+                            <label for="gender" class="block font-bold">Gender</label>
+                            <select id="gender" name="gender" class="border p-2 w-full" required>
+                                <option value="Male" {% if health_info.profile.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if health_info.profile.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if health_info.profile.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="conditions" class="block font-bold">Medical Conditions</label>
+                            <textarea id="conditions" name="conditions" class="border p-2 w-full">{{ health_info.profile.conditions }}</textarea>
+                        </div>
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white font-bold rounded hover:bg-green-700">
+                            Save
+                        </button>
+                        <button 
+                        type="button" 
+                        class="px-4 py-2 bg-gray-500 text-white font-bold rounded hover:bg-gray-700"
+                        onclick="toggleEditForm()"
+                        >
+                           Cancel
+                        </button>
+                    </form>
+                    
+                </div>
+            
+                <a href="{{ url_for('common_diseases') }}" class="profile-item block hover:bg-red-300 transition duration-300">
+                    <h3 class="font-bold mb-2 text-xl">Common Diseases</h3>
+                    <p class="text-sm">Learn about symptoms, causes, and treatments.</p>
+                </a>
+            </div>
+        </section>
+        <script>
+            function toggleEditForm() {
+                const form = document.getElementById('editForm');
+                form.classList.toggle('hidden');
+            }
+        </script>
+
+        <!-- Emergency Information Section -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-4 section-title">Emergency Information</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a href="{{ url_for('emergency_contacts') }}" class="emergency-item block hover:bg-red-300 transition duration-300">
+                    <h3 class="font-bold mb-2 text-xl">Emergency Contacts</h3>
+                    <p class="text-sm">Find local emergency contact numbers.</p>
+                </a>
+                <a href="{{ url_for('first_aid_tips') }}" class="emergency-item block hover:bg-red-300 transition duration-300">
+                    <h3 class="font-bold mb-2 text-xl">First Aid Tips</h3>
+                    <p class="text-sm">Basic first aid instructions for emergencies.</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4 section-title">About Us</h2>
+            <div class="section-content about-item">
+                <p class="text-lg leading-relaxed">We are committed to delivering the best health information and support through our innovative project. Our mission is to empower users with reliable health insights and assist them in managing their well-being effectively. Our dedicated team ensures that you receive accurate and timely health information.</p>
+                <p class="text-lg leading-relaxed mt-4">We are <strong>Dhanush B K, Kusum Pakira,</strong> and <strong> Purushotham V Mitti</strong>, the creators of this final year project during our 8th semester at K S Institute of Technology. This project reflects our commitment to leveraging technology to enhance health management and provide valuable resources to users.</p>
+                <p class="text-lg leading-relaxed mt-4">During development, we focused on designing a user-friendly interface and integrating features that address common health concerns. Our goal is to make essential health information easily accessible, bridging the gap between users and reliable resources.</p>
+                <p class="text-lg leading-relaxed mt-4">We hope this project becomes a valuable tool for those seeking trustworthy health guidance and support. Thank you for exploring our work—we are excited to enhance and expand it further.</p>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4 section-title">Our Services</h2>
+            <div class="section-content">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="service-item">
+                        <h3 class="text-xl font-semibold mb-2">Personalized Health Insights</h3>
+                        <p>Get a customized health assessment based on your data and metrics, providing a clear understanding of your well-being with detailed recommendations.</p>
+                    </div>
+                    <div class="service-item">
+                        <h3 class="text-xl font-semibold mb-2">Health Condition Prediction & Treatment Guidance</h3>
+                        <p>Receive predictions on potential health issues, along with insights into symptoms, causes, and suitable drug treatments to stay proactive.</p>
+                    </div>
+                    <div class="service-item">
+                        <h3 class="text-xl font-semibold mb-2">Emergency Support Contacts</h3>
+                        <p>Quickly access essential emergency contact details for immediate assistance in health crises.</p>
+                    </div>
+                    <div class="service-item">
+                        <h3 class="text-xl font-semibold mb-2">First Aid Knowledge & Tips</h3>
+                        <p>Learn vital first aid techniques and guidelines to effectively handle common medical emergencies.</p>
+                    </div>
+                    <div class="service-item">
+                        <h3 class="text-xl font-semibold mb-2">Symptom Analysis & Guidance</h3>
+                        <p>Check your symptoms, identify possible causes, and receive recommendations on the next steps for appropriate care.</p>
+                    </div>
+                    <div class="service-item">
+                        <h3 class="text-xl font-semibold mb-2">Health Risk Evaluation</h3>
+                        <p>Analyze potential health risks based on your lifestyle and medical history, with actionable insights to help reduce them.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4 section-title">Contact Us</h2>
+            <div class="section-content">
+                <p class="text-lg mb-4" style="font-size: 1.7rem;">For any inquiries or support, please reach out to us:</p>
+                <div class="contact-item" style="font-size: 1.5rem;">
+                    <strong>Email:</strong> <a href="mailto:support@medico.com" class="text-blue-600 hover:underline">support@medico.com</a>
+                </div>
+                <div class="contact-item" style="font-size: 1.5rem;">
+                    <strong>Phone:</strong> +91 76558 23455
+                </div>
+                <div class="contact-item" style="font-size: 1.5rem;">
+                    <strong>Address:</strong> #14, Kanakapura Road, Raghuvanahalli, Bengaluru, KA-560109
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-sm text-gray-600 mt-12 no-copy">
+            <p>&copy; 2025 Medico. All rights reserved.</p>
+            <br>
+            <p>Designed by Dhanush B K, Kusum Pakira, Purushotham V Mitti.</p>
+        </footer>
+        <br>
+
+        <marquee behavior="scroll" direction="left" style="font-size: 1.4rem; color: red;">Demo By KSIT-CS&D Students.</marquee>
+
+    </div>
+        <!-- JavaScript for toggling the menu -->
+        <script>
+            document.getElementById('menu-btn').addEventListener('click', function () {
+                const menu = document.getElementById('menu');
+                menu.classList.toggle('hidden');
+            });
+        </script>
+
+</body>
+
+</html>
